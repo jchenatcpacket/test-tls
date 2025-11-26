@@ -12,12 +12,16 @@ import (
 func main() {
 	// host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
-	certPath := os.Getenv("CERTPATH")
-	keyPath := os.Getenv("KEYPATH")
+	if port == "" {
+        port = "8089"
+    }
+	// certPath := os.Getenv("CERTPATH")
+	// keyPath := os.Getenv("KEYPATH")
 
 	address := fmt.Sprintf(":%s", port)
 
-	listener, err := tlsServer(address, certPath, keyPath)
+	// listener, err := tlsServer(address, certPath, keyPath)
+	listener, err := tcpServer(address)
 	if err != nil {
 		fmt.Printf("err starting server, %v\n", err)
 		os.Exit(1)

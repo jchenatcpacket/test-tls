@@ -32,14 +32,14 @@ services:
       target: rust
       args:
         HOSTNAME: go_receiver
+    command: ["tail", "-f", "/dev/null"]
     environment:
       - HOST=go_receiver
       - PORT=9003
       - SSL_CERT_FILE=/certs/certchain.cer
       - SSL_CERT_DIR=/certs
     volumes:
-      # - ./certs/server.crt:/certs/cert.pem
-      - ./lin-jchen-01.int.cpacket.com/certchain.cer:/certs/certchain.cer
+      - certs:/certs
   receiver:
     build: 
       context: .
@@ -58,6 +58,7 @@ services:
       target: go_receiver
       args:
         HOSTNAME: go_receiver
+    command: ["tail", "-f", "/dev/null"]
     environment:
       - HOST=0.0.0.0
       - PORT=9003
@@ -66,5 +67,9 @@ services:
     ports:
       - "9003:9003/tcp"
     volumes:
-      - ./lin-jchen-01.int.cpacket.com/lin-jchen-01.int.cpacket.com.cer:/certs/lin-jchen-01.int.cpacket.com.cer
-      - ./lin-jchen-01.int.cpacket.com/lin-jchen-01.int.cpacket.com.key:/certs/lin-jchen-01.int.cpacket.com.key
+      - certs:/certs
+    depends_on:
+      - rust_client
+
+volumes:
+  certs:

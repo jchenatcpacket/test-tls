@@ -47,7 +47,10 @@ FROM golang:1.24 AS go_receiver
 
 WORKDIR /certs
 
-COPY --from=python /certs ./
+RUN openssl req -x509 -newkey rsa:4096 -keyout /certs/key.pem -out /certs/cert.pem \
+    -days 365 -nodes -subj "/C=US/ST=State/L=City/O=Organization/CN=server"
+
+# COPY --from=python /certs ./
 
 WORKDIR /app
 
