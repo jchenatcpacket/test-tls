@@ -52,24 +52,6 @@ services:
       - "9003:9003/tcp"
     volumes:
       - ./certs:/certs
-  go_receiver:
-    build:
-      context: .
-      target: go_receiver
-      args:
-        HOSTNAME: go_receiver
-    command: ["tail", "-f", "/dev/null"]
-    environment:
-      - HOST=0.0.0.0
-      - PORT=9003
-      - CERTPATH=/certs/lin-jchen-01.int.cpacket.com.cer
-      - KEYPATH=/certs/lin-jchen-01.int.cpacket.com.key
-    ports:
-      - "9003:9003/tcp"
-    volumes:
-      - certs:/certs
-    depends_on:
-      - rust_client
 
 volumes:
   certs:
