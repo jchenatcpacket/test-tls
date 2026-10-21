@@ -9,14 +9,24 @@ import (
 	"strings"
 )
 
+const (
+	CertPath = "./lin-jchen-01.int.cpacket.com/lin-jchen-01.int.cpacket.com.cer"
+	KeyPath  = "./lin-jchen-01.int.cpacket.com/lin-jchen-01.int.cpacket.com.key"
+)
+
 func main() {
-	// host := os.Getenv("HOST")
 	port := os.Getenv("PORT")
 	if port == "" {
-        port = "8089"
-    }
-	// certPath := os.Getenv("CERTPATH")
-	// keyPath := os.Getenv("KEYPATH")
+		port = "8089"
+	}
+	certPath := os.Getenv("CERTPATH")
+	if certPath == "" {
+		certPath = CertPath
+	}
+	keyPath := os.Getenv("KEYPATH")
+	if keyPath == "" {
+		keyPath = KeyPath
+	}
 
 	address := fmt.Sprintf(":%s", port)
 
@@ -55,6 +65,19 @@ func tcpServer(address string) (net.Listener, error) {
 }
 
 func tlsServer(address string, certPath string, keyPath string) (net.Listener, error) {
+	// Print certPath file content and keyPath
+	certContent, err := os.ReadFile(certPath)
+	if err != nil {
+		fmt.Printf("Error reading cert file: %v\n", err)
+	}
+	fmt.Printf("Certificate file content:\n%s\n", string(certContent))
+
+	keyContent, err := os.ReadFile(certPath)
+	if err != nil {
+		fmt.Printf("Error reading key file: %v\n", err)
+	}
+	fmt.Printf("Key file content:\n%s\n", keyContent)
+
 	cert, err := tls.LoadX509KeyPair(certPath, keyPath)
 	if err != nil {
 		return nil, err
